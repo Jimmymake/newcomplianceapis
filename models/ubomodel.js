@@ -21,3 +21,17 @@
 //     regulatoryHistory: String,
 //     pepDeclaration: { declaredNone: Boolean, declarationText: String },
 //     documents: [{ filename: String, url: String }], // simple placeholder for uploaded docs
+
+
+const mongoose = require("mongoose");
+
+
+uboinfmodel = new mongoose.Schema([{
+    fullname: String,
+    nationality: String,
+    residentialadress: String,
+    persentageofownership: String,
+    souceoffunds: [String],
+    pep: Boolean
+
+}, { timestamps: true }])
