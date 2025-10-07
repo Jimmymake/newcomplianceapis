@@ -1,30 +1,40 @@
-// require('dotenv').config();
-// const express = require('express');
-import express from "express";
-// const mongoose = require('mongoose');
-import mongoose from "mongoose"
-// const cors = require('cors');
-import cors from "cors";
-import dotenv from "dotenv";
 
-// const authRoutes = require('./routes/User');
-// const authRoutes = require("./routes/User"); 
+import express from "express";
+import mongoose from "mongoose"
+import cors from "cors";
+import dotenv from "dotenv"
+import path from "path";
 import authRoutes from "./routes/User.js";
-// const login = require("./routes/login"); 
-import companyinfor from './routes/companyinfor.js'
-// import 
+import userProfileRoutes from "./routes/userProfile.js";
+import companyinfo from './routes/companyinforroute.js';
+import uboinfo from "./routes/uboroute.js";
+import paymentInfo  from "./routes/paymentroute.js";
+import settlementbank from "./routes/settlementbankdetailroute.js"
+import riskmangementinfo from "./routes/riskmanagementroute.js";
+import kycinfo from "./routes/kycdocsroute.js";
+import onboardingRoutes from "./routes/onboarding.js";
+import adminRoutes from "./routes/admin.js";
+import dashboardRoutes from "./routes/dashboard.js";
+import uploadRoutes from "./routes/upload.js";
+import notificationRoutes from "./routes/notifications.js";
+
 const app = express();
 
 
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // parse JSON bodies
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 dotenv.config();
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 
 // Connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/merchantdb';
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => {
     console.error('❌ MongoDB connection error:', err.message);
@@ -34,23 +44,55 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 
-// Routes
+
+
+app.get('/', (req, res) => res.send('Compliance API is running'));
+
+// Authentication routes
+app.use('/api', authRoutes);
+
+// User profile routes
+app.use('/api/user', userProfileRoutes);
+
+// Onboarding management routes
+app.use('/api/onboarding', onboardingRoutes);
+
+// Admin routes
+app.use('/api/admin', adminRoutes);
+
+// User dashboard routes
+app.use('/api/dashboard', dashboardRoutes);
+
+// File upload routes
+app.use('/api/upload', uploadRoutes);
+
+// Notification routes
+app.use('/api/notifications', notificationRoutes);
 
 
 
-
-app.get('/', (req, res) => res.send('Merchant API is running'));
-
-
-
-app.use('/api', authRoutes  );
- 
-
-app.use('/api/companyinfor', companyinfor);
+// Individual step routes (existing)
+// Company info routes
+app.use('/api/companyinfor', companyinfo);
 
 
 
-//routes end here
+//ubo infor
+app.use('/api/uboinfo', uboinfo);
+
+//payment info
+app.use('/api/paymentinfo', paymentInfo);
+
+//settlement bank info
+app.use("/api/settlementbank", settlementbank);
+
+//risk management info
+app.use('/api/riskmanagementinfo', riskmangementinfo);
+
+//kyc info
+app.use('/api/kycinfo', kycinfo);
+
+
 
 
 

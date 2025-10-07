@@ -2,8 +2,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import {nanoid} from "nanoid";
+import { nanoid } from "nanoid";
 import User from "../models/User.js"; // ✅ include .js extension for ESM
+import axios from "axios"; // if you are using ES Modules (type: "module" in package.json)
+
 
 const router = express.Router();
 
@@ -12,32 +14,57 @@ const merchantId = "MID" + nanoid(20);
 console.log(merchantId); // e.g. "V1StGXR8_Z"
 
 // POST /api/auth/signup
-router.post("/signup", async (req, res) => {
+router.post("/user/signup", async (req, res) => {
   try {
-    const { fullname, email, phonenumber, location, password, roll } = req.body;
+    const { fullname, email, phonenumber, location, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
 
       merchantid: merchantId,
-      
+
       fullname,
       email,
       phonenumber,
       location,
       password: hashedPassword,
-      roll,
+      role,
     });
 
     await newUser.save();
 
+    // Send webhook notification (don't wait for it to complete)
+    const payload = {
+      message: "A new user has signed up",
+      user: {
+        fullname,
+        email, 
+        phonenumber,
+      }, 
+      timestamp: new Date().toISOString()
+    }
+
+    // Send webhook asynchronously (don't await)
+    axios.post(
+      "https://webhook.site/f35d1012-7235-4853-bac4-ee2a2004e651", 
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    ).catch(err => {
+      console.error("Webhook failed:", err.message);
+      // Don't send response here - just log the error
+    });
+
     // Generate JWT token with fullname & email
     const token = jwt.sign(
-      { fullname: newUser.fullname, email: newUser.email, merchantid: newUser.merchantid },
+      { fullname: newUser.fullname, email: newUser.email, merchantid: newUser.merchantid, role: newUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "User registered successfully!",
       token,
       user: {
@@ -45,7 +72,7 @@ router.post("/signup", async (req, res) => {
         email: newUser.email,
         phonenumber: newUser.phonenumber,
         location: newUser.location,
-        roll: newUser.roll,
+        role: newUser.role,
         onboardingStatus: newUser.onboardingStatus,
         onboardingSteps: newUser.onboardingSteps,
         createdAt: newUser.createdAt
@@ -55,22 +82,23 @@ router.post("/signup", async (req, res) => {
   } catch (err) {
     if (err.code === 11000) {
       if (err.keyPattern.email) {
+        console.error("Error sending webhook:", err.message);
         return res.status(400).json({ message: "User with this email already exists" });
       }
       if (err.keyPattern.phonenumber) {
         return res.status(400).json({ message: "User with this phone number already exists" });
       }
     }
-   res.status(500).json({ 
-    message: "Something went wrong", 
-    error: err.message // <-- only send the error message
-});
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: err.message // <-- only send the error message
+    });
 
   }
 });
 
 // // POST /api/auth/login
-router.post("/login", async (req, res) => {
+router.post("/user/login", async (req, res) => {
   try {
     const { emailOrPhone, password } = req.body;
 
@@ -91,12 +119,12 @@ router.post("/login", async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign(
-      { fullname: user.fullname, email: user.email,merchantId:user.merchantid },
+      { fullname: user.fullname, email: user.email,role: user.role, merchantId: user.merchantid },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Login successful",
       token,
       user: {
@@ -104,7 +132,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         phonenumber: user.phonenumber,
         location: user.location,
-        roll: user.roll,
+        role: user.role,
         onboardingStatus: user.onboardingStatus,
         onboardingSteps: user.onboardingSteps,
         createdAt: user.createdAt
@@ -112,16 +140,16 @@ router.post("/login", async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    return res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
-router.get("/list", async (req, res) => {
+router.get("/user/list", async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
-    res.json(users);
+    return res.json(users);
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    return res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
@@ -143,9 +171,9 @@ router.get("/search", async (req, res) => {
       ]
     });
 
-    res.json(users);
+    return res.json(users);
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    return res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
@@ -158,10 +186,10 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: "User deleted successfully", user: deletedUser });
+    return res.status(200).json({ message: "User deleted successfully", user: deletedUser });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error", error: err.message });
+    return res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 

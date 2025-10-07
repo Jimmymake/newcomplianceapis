@@ -3,15 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "docker:build": "docker build -t compliance-api .",
+    "docker:run": "docker run -p 4000:4000 compliance-api",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f compliance-api",
+    "docker:restart": "docker-compose restart compliance-api",
+    "docker:clean": "docker-compose down -v && docker system prune -f",
+    "docker:hub:build": "./docker-hub.sh build",
+    "docker:hub:push": "./docker-hub.sh push",
+    "docker:hub:pull": "./docker-hub.sh pull",
+    "docker:hub:status": "./docker-hub.sh status"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
@@ -19,7 +32,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1",
     "mongoose-sequence": "^6.0.1",
-    "nanoid": "^5.1.5"
+    "multer": "^2.0.2",
+    "nanoid": "^5.1.5",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

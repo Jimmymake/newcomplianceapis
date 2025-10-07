@@ -1,6 +1,10 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
-const prosessinginfor = new mongoose.Schema({
+const paymentinfo = new mongoose.Schema({
+    stepid: { type: Number, default: 3 },
+    merchantid: String,
+    completed: { type: Boolean, default: false },
     requredcurrency: { KES: Boolean, USD: Boolean, GBP: Boolean, other: String },
     exmonthlytransaction: { amountinusd: Number, numberoftran: Number },
     avgtranssize: Number,
@@ -11,6 +15,9 @@ const prosessinginfor = new mongoose.Schema({
     },
     chargebackrefungrate: String
 
+}, { timestamps: true, collection: "paymentinfo" })
 
 
-})
+// export default  mongoose.model("paymentinfo", paymentinfo)
+const PaymentInfo =mongoose.model("paymentinfo", paymentinfo)
+export default PaymentInfo;

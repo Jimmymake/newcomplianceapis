@@ -1,37 +1,21 @@
-// const UboSchema = new mongoose.Schema({
-//     fullName: String,
-//     nationality: String,
-//     dateOfBirth: Date,
-//     residentialAddress: String,
-//     percentageOwnership: Number,
-//     sourceOfFunds: String,
-//     isPEP: { type: Boolean, default: false },
-//     pepDetails: String
-// }, { _id: false });
+import mongoose from "mongoose";
 
-// ubos: [UboSchema],
-//     paymentMethods: { cards: Boolean, mobileMoney: Boolean, other: [String] },
-//     requiredCurrencies: [String],
-//     expectedMonthlyVolumeUSD: Number,
-//     expectedMonthlyTxCount: Number,
-//     avgTxSizeUSD: Number,
-//     chargebackRate: Number,
-//     amlKycPolicy: { type: Boolean, default: false },
-//     complianceOfficer: { fullName: String, phone: String, email: String },
-//     regulatoryHistory: String,
-//     pepDeclaration: { declaredNone: Boolean, declarationText: String },
-//     documents: [{ filename: String, url: String }], // simple placeholder for uploaded docs
+const uboSchema = new mongoose.Schema({
+  fullname: String,
+  nationality: String,
+  residentialadress: String,
+  persentageofownership: String,
+  souceoffunds:String,
+  pep: Boolean,
+  pepdetails: String
+}, { _id: false });
 
+const uboinfor = new mongoose.Schema({
+  stepid: { type: Number, default: 2 },
+  merchantid: { type: String, required: true },
+  completed: { type: Boolean, default: false },
+  ubo: [uboSchema]
+}, { timestamps: true, collection: "uboinfor" });
 
-const mongoose = require("mongoose");
-
-
-uboinfmodel = new mongoose.Schema([{
-    fullname: String,
-    nationality: String,
-    residentialadress: String,
-    persentageofownership: String,
-    souceoffunds: [String],
-    pep: Boolean
-
-}, { timestamps: true }])
+export default mongoose.model("uboinfor", uboinfor);
+// export default UboInfo;

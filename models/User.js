@@ -1,15 +1,16 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 
 
 const signupSchema = new mongoose.Schema({
-  roll: String,
+  role: String,
   merchantid: String,
   onboardingStatus: {
     type: String,
     enum: ['pending', 'in-progress', 'reviewed', 'approved', 'rejected'],
     default: 'pending'
   },
+
   onboardingSteps: {
     companyinformation: { companyName: String, fileUrl: String, completed: { type: Boolean, default: false } },
     ubo: { fullName: String, fileUrl: String, completed: { type: Boolean, default: false } },
@@ -17,8 +18,7 @@ const signupSchema = new mongoose.Schema({
     settlmentbankdetails: { bankName: String, fileUrl: String, completed: { type: Boolean, default: false } },
     riskmanagement: { riskAssessment: String, fileUrl: String, completed: { type: Boolean, default: false } },
     kycdocs: { docType: String, fileUrl: String, completed: { type: Boolean, default: false } }
-  }
-  ,
+  },
 
   fullname: String,
   email: { type: String, unique: true, required: true },
@@ -28,7 +28,7 @@ const signupSchema = new mongoose.Schema({
 
 
 
-}, { timestamps: true });
+}, { timestamps: true, collection: "users" });
 
 
 // function checkStepComplete(stepData) {
@@ -73,6 +73,7 @@ const signupSchema = new mongoose.Schema({
 // });
 
 
-const Signup = mongoose.model("Signup", signupSchema);
 
-module.exports = Signup;
+
+
+export default mongoose.model("Signup", signupSchema);
