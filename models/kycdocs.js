@@ -15,7 +15,8 @@ const kycdocs = new mongoose.Schema({
     shareholderpassportid: String,
     websiteipadress: [String],
     proofofbomain: String,
-    proofofadress: String
+    proofofadress: String,
+    pepform: String
 
 
 }, { timestamps: true, collection: "kycdocs" })

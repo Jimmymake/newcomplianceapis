@@ -9,19 +9,19 @@ import axios from "axios"; // if you are using ES Modules (type: "module" in pac
 
 const router = express.Router();
 
-const merchantId = "MID" + nanoid(20);
-
-console.log(merchantId); // e.g. "V1StGXR8_Z"
-
 // POST /api/auth/signup
 router.post("/user/signup", async (req, res) => {
   try {
     const { fullname, email, phonenumber, location, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Generate unique merchant ID for each user
+    const merchantId = "MID" + nanoid(20) + Date.now() + Math.random().toString(36).substring(2, 15);
+    // const merchantIdAssignedAt = new Date();
+    
     const newUser = new User({
-
       merchantid: merchantId,
-
+      // merchantIdAssignedAt: merchantIdAssignedAt,
       fullname,
       email,
       phonenumber,
@@ -73,6 +73,8 @@ router.post("/user/signup", async (req, res) => {
         phonenumber: newUser.phonenumber,
         location: newUser.location,
         role: newUser.role,
+        merchantid: newUser.merchantid,
+        merchantIdAssignedAt: newUser.merchantIdAssignedAt,
         onboardingStatus: newUser.onboardingStatus,
         onboardingSteps: newUser.onboardingSteps,
         createdAt: newUser.createdAt
@@ -133,6 +135,8 @@ router.post("/user/login", async (req, res) => {
         phonenumber: user.phonenumber,
         location: user.location,
         role: user.role,
+        merchantid: user.merchantid,
+        merchantIdAssignedAt: user.merchantIdAssignedAt,
         onboardingStatus: user.onboardingStatus,
         onboardingSteps: user.onboardingSteps,
         createdAt: user.createdAt

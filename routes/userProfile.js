@@ -137,12 +137,6 @@ router.get("/form-status", async (req, res) => {
         hasData: !!kyc,
         lastUpdated: kyc?.updatedAt || null,
         stepId: 6
-      },
-      pepform: {
-          completed: kyc?.completed || false,
-        hasData: !!kyc,
-        lastUpdated: kyc?.updatedAt || null,
-        stepId: 6
       }
     };
 
@@ -344,7 +338,9 @@ router.get("/profiles", async (req, res) => {
           paymentandprosessing: !!paymentMap.get(merchantid),
           settlmentbankdetails: !!settlementMap.get(merchantid),
           riskmanagement: !!riskMap.get(merchantid),
-          kycdocs: !!kycMap.get(merchantid)
+          kycdocs: !!kycMap.get(merchantid),
+          approved: false,
+          rejected: false
         }
       };
     });

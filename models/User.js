@@ -5,9 +5,10 @@ import mongoose from "mongoose";
 const signupSchema = new mongoose.Schema({
   role: String,
   merchantid: String,
+  merchantIdAssignedAt: { type: Date, default: Date.now },
   onboardingStatus: {
     type: String,
-    enum: ['pending', 'in-progress', 'reviewed', 'approved', 'rejected'],
+    enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
 

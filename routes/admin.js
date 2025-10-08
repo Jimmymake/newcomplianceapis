@@ -287,5 +287,69 @@ router.get("/analytics/step-completion", async (req, res) => {
   }
 });
 
+// Approve merchant - matches frontend expected URL
+router.put("/approve-merchant/:merchantId", async (req, res) => {
+  try {
+    const { merchantId } = req.params;
+    const { reason, notes } = req.body;
+
+    const user = await User.findOne({ merchantid: merchantId });
+    if (!user) {
+      return res.status(404).json({ message: "Merchant not found" });
+    }
+
+    // Update user status to approved
+    user.onboardingStatus = 'approved';
+    await user.save();
+
+    res.json({
+      message: "Merchant approved successfully",
+      merchantId,
+      status: 'approved',
+      reason,
+      notes,
+      approvedAt: new Date(),
+      approvedBy: req.user.email || req.user.fullname
+    });
+  } catch (error) {
+    console.error("Error approving merchant:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Reject merchant - matches frontend expected URL
+router.put("/reject-merchant/:merchantId", async (req, res) => {
+  try {
+    const { merchantId } = req.params;
+    const { reason, notes } = req.body;
+
+    if (!reason) {
+      return res.status(400).json({ message: "Rejection reason is required" });
+    }
+
+    const user = await User.findOne({ merchantid: merchantId });
+    if (!user) {
+      return res.status(404).json({ message: "Merchant not found" });
+    }
+
+    // Update user status to rejected
+    user.onboardingStatus = 'rejected';
+    await user.save();
+
+    res.json({
+      message: "Merchant rejected successfully",
+      merchantId,
+      status: 'rejected',
+      reason,
+      notes,
+      rejectedAt: new Date(),
+      rejectedBy: req.user.email || req.user.fullname
+    });
+  } catch (error) {
+    console.error("Error rejecting merchant:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 export default router;
 
