@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # MongoDB Database (Development)
+  # MongoDB Database - Development version
   mongodb:
     image: mongo:7.0
     container_name: compliance-mongodb-dev
@@ -9,17 +9,23 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: merchantdb
+      MONGO_INITDB_DATABASE: merchantdb_dev
     ports:
-      - "27017:27017"
+      - "27018:27017"  # Different port for dev
     volumes:
       - mongodb_dev_data:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
-      - compliance-dev-network
+      - compliance-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  # Compliance API Application (Development with hot reload)
-  compliance-api-dev:
+  # Compliance API Application - Development
+  compliance-api:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -28,21 +34,22 @@ services:
     environment:
       NODE_ENV: development
       PORT: 4000
-      MONGO_URI: mongodb://admin:password123@mongodb:27017/merchantdb?authSource=admin
+      MONGO_URI: mongodb://admin:password123@mongodb:27017/merchantdb_dev?authSource=admin
       JWT_SECRET: dev-jwt-secret-key
     ports:
       - "4000:4000"
     volumes:
-      - .:/app
-      - /app/node_modules
       - ./uploads:/app/uploads
+      - .:/app  # Mount source code for hot reload
+      - /app/node_modules  # Exclude node_modules
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     networks:
-      - compliance-dev-network
+      - compliance-network
     command: npm run dev
 
-  # MongoDB Express (Development)
+  # MongoDB Express - Development
   mongo-express:
     image: mongo-express:1.0.2
     container_name: compliance-mongo-express-dev
@@ -56,19 +63,15 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     networks:
-      - compliance-dev-network
+      - compliance-network
 
 volumes:
   mongodb_dev_data:
     driver: local
 
 networks:
-  compliance-dev-network:
+  compliance-network:
     driver: bridge
-
-
-
-
-

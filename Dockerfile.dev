@@ -1,4 +1,4 @@
-# Development Dockerfile with hot reload
+# Development Dockerfile
 FROM node:18-alpine
 
 # Set the working directory in the container
@@ -7,8 +7,11 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies for development)
-RUN npm ci
+# Install all dependencies (including dev dependencies)
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
 
 # Create uploads directory with proper permissions
 RUN mkdir -p uploads && chmod 755 uploads
@@ -29,8 +32,3 @@ ENV NODE_ENV=development
 
 # Command to run the application in development mode
 CMD ["npm", "run", "dev"]
-
-
-
-
-
