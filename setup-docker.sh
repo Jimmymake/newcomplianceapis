@@ -57,7 +57,7 @@ start_production() {
     echo "🚀 Starting Production Environment..."
     docker-compose up -d
     echo "✅ Production environment started!"
-    echo "📍 API: http://localhost:4000"
+    echo "📍 API: http://localhost:4001"
     echo "📍 MongoDB Admin: http://localhost:8081 (admin/admin123)"
 }
 
@@ -66,7 +66,7 @@ start_development() {
     echo "🛠️  Starting Development Environment..."
     docker-compose -f docker-compose.dev.yml up -d
     echo "✅ Development environment started!"
-    echo "📍 API: http://localhost:4000 (with hot reload)"
+    echo "📍 API: http://localhost:4001 (with hot reload)"
     echo "📍 MongoDB Admin: http://localhost:8081 (admin/admin123)"
 }
 

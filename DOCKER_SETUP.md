@@ -26,12 +26,12 @@ npm run docker:start-dev
 
 ### Production Setup
 - **MongoDB**: `localhost:27017` (with persistent data)
-- **API**: `http://localhost:4000`
+- **API**: `http://localhost:4001`
 - **Mongo Express**: `http://localhost:8081` (admin/admin123)
 
 ### Development Setup
 - **MongoDB**: `localhost:27018` (separate from production)
-- **API**: `http://localhost:4000` (with hot reload)
+- **API**: `http://localhost:4001` (with hot reload)
 - **Mongo Express**: `http://localhost:8081` (admin/admin123)
 
 ## 🛠️ Available Commands
@@ -85,7 +85,7 @@ compliance-api/
 #### Production (.env)
 ```env
 NODE_ENV=production
-PORT=4000
+PORT=4001
 MONGO_URI=mongodb://admin:password123@mongodb:27017/merchantdb?authSource=admin
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 ```
@@ -93,7 +93,7 @@ JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 #### Development
 ```env
 NODE_ENV=development
-PORT=4000
+PORT=4001
 MONGO_URI=mongodb://admin:password123@mongodb:27017/merchantdb_dev?authSource=admin
 JWT_SECRET=dev-jwt-secret-key
 ```
@@ -196,7 +196,7 @@ docker image prune
 1. **Port Already in Use**
    ```bash
    # Check what's using the port
-   lsof -i :4000
+   lsof -i :4001
    lsof -i :27017
    
    # Stop conflicting services

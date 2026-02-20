@@ -30,7 +30,7 @@ docker-compose -f docker-compose.dev.yml up -d
 
 The Docker setup includes the following services:
 
-### 1. **compliance-api** (Port 4000)
+### 1. **compliance-api** (Port 4001)
 - Main Node.js application
 - Handles all API endpoints
 - Connects to MongoDB
@@ -75,7 +75,7 @@ npm run docker:clean
 docker build -t compliance-api .
 
 # Run the container
-docker run -p 4000:4000 compliance-api
+docker run -p 4001:4001 compliance-api
 
 # Start with docker-compose
 docker-compose up -d
@@ -97,7 +97,7 @@ The application uses the following environment variables:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `NODE_ENV` | `production` | Environment mode |
-| `PORT` | `4000` | Application port |
+| `PORT` | `4001` | Application port |
 | `MONGO_URI` | MongoDB connection string | Database connection |
 | `JWT_SECRET` | Required | JWT signing secret |
 
@@ -141,7 +141,7 @@ mongodb://admin:password123@mongodb:27017/merchantdb?authSource=admin
 1. **Port already in use**
    ```bash
    # Check what's using the port
-   lsof -i :4000
+   lsof -i :4001
    
    # Stop the process or change the port in docker-compose.yml
    ```
@@ -190,8 +190,8 @@ docker-compose up -d
 
 Once running, the API will be available at:
 
-- **API**: http://localhost:4000
-- **Health Check**: http://localhost:4000/
+- **API**: http://localhost:4001
+- **Health Check**: http://localhost:4001/
 - **MongoDB Admin**: http://localhost:8081
 
 ## Security Notes

@@ -52,7 +52,7 @@ start_production() {
     docker-compose ps
     
     print_status "Production environment started successfully!"
-    print_status "API: http://localhost:4000"
+    print_status "API: http://localhost:4001"
     print_status "Mongo Express: http://localhost:8081 (admin/admin123)"
     print_status "MongoDB: localhost:27017"
 }
@@ -72,7 +72,7 @@ start_development() {
     docker-compose -f docker-compose.dev.yml ps
     
     print_status "Development environment started successfully!"
-    print_status "API: http://localhost:4000 (with hot reload)"
+    print_status "API: http://localhost:4001 (with hot reload)"
     print_status "Mongo Express: http://localhost:8081 (admin/admin123)"
     print_status "MongoDB: localhost:27018"
 }
