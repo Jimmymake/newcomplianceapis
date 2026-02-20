@@ -25,7 +25,7 @@ RUN chown -R compliance:nodejs /app
 USER compliance
 
 # Expose the port the app runs on
-EXPOSE 4000
+EXPOSE 4001
 
 # Define environment variable
 ENV NODE_ENV=development
