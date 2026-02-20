@@ -24,14 +24,25 @@ const app = express();
 
 // CORS: allow frontend origin(s). Preflight (OPTIONS) must get these headers.
 const corsOrigin = process.env.CORS_ORIGIN || "*";
+const allowedOrigins = corsOrigin === "*" ? [] : corsOrigin.split(",").map((o) => o.trim());
 const corsOptions = {
-  origin: corsOrigin === "*" ? true : corsOrigin.split(",").map((o) => o.trim()),
+  origin(origin, callback) {
+    // No origin (e.g. same-origin or tools like Postman) — allow
+    if (!origin) return callback(null, true);
+    if (corsOrigin === "*") return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Allow subdomains of mam-laka.com when env may be missing in production
+    if (origin.endsWith(".mam-laka.com") || origin === "https://mam-laka.com") return callback(null, true);
+    callback(null, false);
+  },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
   optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
+// Ensure OPTIONS (preflight) gets CORS headers even if proxy behaves oddly
+app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
