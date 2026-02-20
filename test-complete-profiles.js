@@ -1,7 +1,7 @@
 // Test script for complete profiles list API
 // Run with: node test-complete-profiles.js
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 async function testCompleteProfilesAPI() {
   console.log('🧪 Testing Complete Profiles List API...\n');

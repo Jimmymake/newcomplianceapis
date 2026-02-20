@@ -1,7 +1,7 @@
 // Test script for Company Information APIs
 // Run with: node test-company-api.js
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 async function testCompanyAPI() {
   console.log('🧪 Testing Company Information APIs...\n');

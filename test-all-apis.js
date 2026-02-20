@@ -1,7 +1,7 @@
 // Comprehensive test script for all requested APIs
 // Run with: node test-all-apis.js
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 async function testAllAPIs() {
   console.log('🧪 Testing All Requested APIs...\n');

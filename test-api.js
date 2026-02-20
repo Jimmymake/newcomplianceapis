@@ -1,7 +1,7 @@
 // Simple API test script
 // Run with: node test-api.js
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 async function testAPI() {
   console.log('🧪 Testing Compliance API...\n');
@@ -9,7 +9,7 @@ async function testAPI() {
   try {
     // Test 1: Health check
     console.log('1. Testing health check...');
-    const healthResponse = await fetch('http://localhost:4000/');
+    const healthResponse = await fetch('http://localhost:4001/');
     const healthData = await healthResponse.text();
     console.log('✅ Health check:', healthData);
 

@@ -1,7 +1,7 @@
 // Quick test to verify company update fix
 // Run with: node test-company-update-fix.js
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 async function testCompanyUpdateFix() {
   console.log('🔧 Testing Company Update Fix...\n');

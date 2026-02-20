@@ -1,4 +1,3 @@
-
 import express from "express";
 import mongoose from "mongoose"
 import cors from "cors";
@@ -18,15 +17,25 @@ import dashboardRoutes from "./routes/dashboard.js";
 import uploadRoutes from "./routes/upload.js";
 import notificationRoutes from "./routes/notifications.js";
 
+// Load env first so CORS_ORIGIN is available
+dotenv.config();
+
 const app = express();
 
-
+// CORS: allow frontend origin(s). Preflight (OPTIONS) must get these headers.
+const corsOrigin = process.env.CORS_ORIGIN || "*";
+const corsOptions = {
+  origin: corsOrigin === "*" ? true : corsOrigin.split(",").map((o) => o.trim()),
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
 
 // Middleware
-app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-dotenv.config();
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
@@ -97,5 +106,5 @@ app.use('/api/kycinfo', kycinfo);
 
 
 // Start server
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

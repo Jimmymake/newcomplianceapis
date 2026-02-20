@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 // Test script for approval/rejection endpoints
 async function testApprovalEndpoints() {
@@ -111,7 +111,7 @@ async function testApprovalEndpoints() {
 
 // Instructions for running the test
 console.log('📋 Instructions:');
-console.log('1. Make sure your server is running on http://localhost:4000');
+console.log('1. Make sure your server is running on http://localhost:4001');
 console.log('2. Replace "YOUR_ADMIN_TOKEN_HERE" with a valid admin JWT token');
 console.log('3. Run: node test-approval-endpoints.js');
 console.log('');

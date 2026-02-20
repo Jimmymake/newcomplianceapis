@@ -1,7 +1,7 @@
 // Debug script for company update issue
 // Run with: node debug-company-update.js
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:4001/api';
 
 async function debugCompanyUpdate() {
   console.log('🔍 Debugging Company Update Issue...\n');
