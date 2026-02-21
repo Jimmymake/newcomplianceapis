@@ -8,8 +8,8 @@ const signupSchema = new mongoose.Schema({
   merchantIdAssignedAt: { type: Date, default: Date.now },
   onboardingStatus: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    enum: ['in-progress', 'pending', 'approved', 'rejected'],
+    default: 'in-progress'
   },
 
   onboardingSteps: {
